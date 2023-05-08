@@ -22,7 +22,7 @@ class Game :
                     sys.exit() # 게임 종료
                 
                 # get delta time  
-                dt = self.clock.tick() / 1000
+                dt = self.clock.tick(60) / 1000
                 self.level.run(dt)
                 # update game
                 pygame.display.update()
