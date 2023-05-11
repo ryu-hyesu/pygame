@@ -33,8 +33,21 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = 0
             
     def move(self, dt) :
-        self.pos += self.direction * self.speed * dt 
-        self.rect.center = self.pos
+        # nomarlizing a vector
+        # diganosal direction is more 40 precent speed than one direction
+        
+        # normalize wouldn't work in 'zero'
+        if self.direction.magnitude() > 0 :
+            self.direction = self.direction.normalize()
+        
+        # horizontal movement
+        self.pos.x += self.direction.x * self.speed * dt 
+        self.rect.center.x = self.pos.x
+        
+        # vertical movement
+        self.pos.y += self.direction.y * self.speed * dt 
+        self.rect.center.y = self.pos.y
+        
 
     # all_sprites's update is run ofcourse this
     def update(self, dt) :
