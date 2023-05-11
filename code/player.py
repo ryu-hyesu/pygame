@@ -30,24 +30,42 @@ class Player(pygame.sprite.Sprite):
         for animation in self.animations.keys() :
             full_path = './graphics/character/' + animation
             self.animations[animation] = import_folder(full_path)
+    
+    def animate(self,dt) :
+        self.frame_index += 4 * dt
+        if self.frame_index >= len(self.animations[self.status]) :
+            self.frame_index = 0
         
+        self.image = self.animations[self.status][int(self.frame_index)]
+    
     def input(self) :
         # list with all of the keys that are potentially being pressed
         keys = pygame.key.get_pressed()
         
         if keys[pygame.K_UP] :
             self.direction.y = -1 
+            self.status = 'up'
         elif keys[pygame.K_DOWN] :
             self.direction.y = 1
+            self.status = 'down'
         else :
             self.direction.y = 0
             
         if keys[pygame.K_RIGHT] :
             self.direction.x = 1
+            self.status = 'right'
         elif keys[pygame.K_LEFT] :
             self.direction.x = -1 
+            self.status = 'left'
         else :
             self.direction.x = 0
+    
+    def get_status(self) :
+        # if the player is not moving :
+        # idle
+        if self.direction.magnitude() == 0 : # player is not going to move
+            # add _idle to the status
+            self.status = self.status.split('_')[0] + '_idle'
             
     def move(self, dt) :
         # nomarlizing a vector
@@ -68,4 +86,6 @@ class Player(pygame.sprite.Sprite):
     # all_sprites's update is run ofcourse this
     def update(self, dt) :
         self.input()
+        self.get_status()
         self.move(dt)
+        self.animate(dt)
